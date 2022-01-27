@@ -3,10 +3,7 @@ package com.polytech.LBChess.controller;
 import com.polytech.LBChess.model.User;
 import com.polytech.LBChess.service.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,10 +26,26 @@ public class UserController {
     public ResponseEntity<User> getUserByName(@PathVariable String userName) {
         User user = userService.getUserByName(userName);
 
-        if(user==null) {
-            return ResponseEntity.notFound().build();
-        }
+        if(!user.isNull())
+            return ResponseEntity.ok(user);
 
-        return ResponseEntity.ok(user);
+        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("")
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        User createdUser = userService.createUser(user);
+        if (!createdUser.isNull()) {
+            return ResponseEntity.ok(createdUser);
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @DeleteMapping("/{userName}")
+    public ResponseEntity<String> deleteUserByName(@PathVariable String userName) {
+        if (userService.deleteUserByName(userName)) {
+            return ResponseEntity.ok("User successfuly removed");
+        }
+        return ResponseEntity.notFound().build();
     }
 }

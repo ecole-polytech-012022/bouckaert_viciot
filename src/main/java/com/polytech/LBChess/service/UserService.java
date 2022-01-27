@@ -1,5 +1,6 @@
 package com.polytech.LBChess.service;
 
+import com.polytech.LBChess.model.NullUser;
 import com.polytech.LBChess.model.User;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +10,9 @@ import java.util.List;
 @Service
 public class UserService {
 
-    public List<User> getAllUsers() {
+    private List<User> users = new ArrayList<>();
+
+    public void initUsers() {
         User user1 = new User();
         user1.setNom("Dupond");
         user1.setPrenom("Henri");
@@ -20,11 +23,15 @@ public class UserService {
         user2.setPrenom("Paul");
         user2.setEmail("paul.durand@orange.fr");
 
-        List<User> list = new ArrayList<>();
-        list.add(user1);
-        list.add(user2);
+        users.add(user1);
+        users.add(user2);
+    }
 
-        return list;
+    public List<User> getAllUsers() {
+        if(this.users.isEmpty())
+            this.initUsers();
+
+        return this.users;
     }
 
     public User getUserByName(String userName) {
@@ -35,7 +42,25 @@ public class UserService {
                 return user;
             }
         }
+        return new NullUser();
+    }
 
-        return null;
+    public User createUser(User givenUser) {
+        if(givenUser.getNom() != null && givenUser.getPrenom() != null && givenUser.getEmail() != null) {
+            this.users.add(givenUser);
+            return givenUser;
+        }
+        return new NullUser();
+    }
+
+    public boolean deleteUserByName(String userName) {
+        for(User user : this.users){
+            if(user.getNom().equals(userName)) {
+                users.remove(user);
+                return true;
+            }
+        }
+        return false;
+
     }
 }

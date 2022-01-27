@@ -7,4 +7,8 @@ public class User {
     private String nom;
     private String prenom;
     private String email;
+
+    public boolean isNull() {
+        return false;
+    }
 }
