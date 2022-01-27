@@ -44,7 +44,7 @@ public class UserController {
     @DeleteMapping("/{userName}")
     public ResponseEntity<String> deleteUserByName(@PathVariable String userName) {
         if (userService.deleteUserByName(userName)) {
-            return ResponseEntity.ok("User successfuly removed");
+            return ResponseEntity.ok("User successfully removed");
         }
         return ResponseEntity.notFound().build();
     }
