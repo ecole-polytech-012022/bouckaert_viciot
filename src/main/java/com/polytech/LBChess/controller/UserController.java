@@ -26,8 +26,9 @@ public class UserController {
     public ResponseEntity<User> getUserByName(@PathVariable String userName) {
         User user = userService.getUserByName(userName);
 
-        if(!user.isNull())
+        if(!user.isNull()) {
             return ResponseEntity.ok(user);
+        }
 
         return ResponseEntity.notFound().build();
     }
