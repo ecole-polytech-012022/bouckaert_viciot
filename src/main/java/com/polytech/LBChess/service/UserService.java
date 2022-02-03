@@ -1,6 +1,5 @@
 package com.polytech.LBChess.service;
 
-import com.polytech.LBChess.model.NullUser;
 import com.polytech.LBChess.model.User;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +41,7 @@ public class UserService {
                 return user;
             }
         }
-        return new NullUser();
+        return null;
     }
 
     public User createUser(User givenUser) {
@@ -50,7 +49,7 @@ public class UserService {
             this.users.add(givenUser);
             return givenUser;
         }
-        return new NullUser();
+        return null;
     }
 
     public boolean deleteUserByName(String userName) {

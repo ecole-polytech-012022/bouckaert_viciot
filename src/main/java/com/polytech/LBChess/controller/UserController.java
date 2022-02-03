@@ -26,8 +26,9 @@ public class UserController {
     public ResponseEntity<User> getUserByName(@PathVariable String userName) {
         User user = userService.getUserByName(userName);
 
-        if(!user.isNull())
+        if(user != null) {
             return ResponseEntity.ok(user);
+        }
 
         return ResponseEntity.notFound().build();
     }
@@ -35,7 +36,7 @@ public class UserController {
     @PostMapping("")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         User createdUser = userService.createUser(user);
-        if (!createdUser.isNull()) {
+        if (createdUser != null) {
             return ResponseEntity.ok(createdUser);
         }
         return ResponseEntity.badRequest().build();
