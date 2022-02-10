@@ -1,5 +1,7 @@
 package com.polytech.LBChess.controller;
 
+import com.polytech.LBChess.dto.UserDTO;
+import com.polytech.LBChess.mapper.UserMapper;
 import com.polytech.LBChess.model.User;
 import com.polytech.LBChess.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -18,26 +20,32 @@ public class UserController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<List<UserDTO>> getAllUsers()
+    {
+        List<User> users = userService.getAllUsers();
+        List<UserDTO> usersDtos = UserMapper.toUserDTOList(users);
+
+        return ResponseEntity.ok(usersDtos);
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<User> getUserByName(@PathVariable Integer userId) {
+    public ResponseEntity<UserDTO> getUserByName(@PathVariable Integer userId) {
         User user = userService.getUserById(userId);
+        UserDTO userDTO = UserMapper.toUserDTO(user);
 
         if(user != null) {
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok(userDTO);
         }
 
         return ResponseEntity.notFound().build();
     }
 
     @PostMapping("")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<UserDTO> createUser(@RequestBody User user) {
         User createdUser = userService.createUser(user);
+        UserDTO createdUserDto = UserMapper.toUserDTO(createdUser);
         if (createdUser != null)  {
-            return ResponseEntity.ok(createdUser);
+            return ResponseEntity.ok(createdUserDto);
         }
         return ResponseEntity.badRequest().build();
     }
