@@ -1,16 +1,20 @@
 package com.polytech.LBChess.service;
 
-import com.polytech.LBChess.model.NullUser;
 import com.polytech.LBChess.model.User;
+import com.polytech.LBChess.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
+    private final UserRepository repository;
 
-    private List<User> users = new ArrayList<>();
+    public UserService(UserRepository repository) {
+        this.repository = repository;
+        this.initUsers();
+    }
 
     public void initUsers() {
         User user1 = new User();
@@ -23,44 +27,39 @@ public class UserService {
         user2.setPrenom("Paul");
         user2.setEmail("paul.durand@orange.fr");
 
-        users.add(user1);
-        users.add(user2);
+        User user3 = new User();
+        user3.setNom("Durant");
+        user3.setPrenom("Pauline");
+        user3.setEmail("pauline.durant@orange.fr");
+
+        this.repository.save(user1);
+        this.repository.save(user2);
+        this.repository.save(user3);
     }
 
     public List<User> getAllUsers() {
-        if(this.users.isEmpty())
-            this.initUsers();
-
-        return this.users;
+        return this.repository.findAll();
     }
 
-    public User getUserByName(String userName) {
-        List<User> users = this.getAllUsers();
+    public User getUserById(Integer id) {
+        Optional<User> found = this.repository.findById(id);
 
-        for(User user : users){
-            if(user.getNom().equals(userName)) {
-                return user;
-            }
-        }
-        return new NullUser();
+        return found.orElse(null);
     }
 
     public User createUser(User givenUser) {
-        if(givenUser.getNom() != null && givenUser.getPrenom() != null && givenUser.getEmail() != null) {
-            this.users.add(givenUser);
-            return givenUser;
+        if (givenUser.getNom() != null && givenUser.getEmail() != null && givenUser.getPrenom() != null) {
+            return this.repository.save(givenUser);
         }
-        return new NullUser();
+        return null;
     }
 
-    public boolean deleteUserByName(String userName) {
-        for(User user : this.users){
-            if(user.getNom().equals(userName)) {
-                users.remove(user);
-                return true;
-            }
+    public boolean deleteUser(Integer userId) {
+        User found = getUserById(userId);
+        if (found != null) {
+            this.repository.deleteById(found.getId());
+            return true;
         }
         return false;
-
     }
 }

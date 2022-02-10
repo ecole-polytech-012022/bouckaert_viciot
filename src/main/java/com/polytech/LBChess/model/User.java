@@ -1,14 +1,31 @@
 package com.polytech.LBChess.model;
 
-import lombok.Data;
+import lombok.*;
 
+import javax.persistence.*;
+
+@Entity
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name="users")
 @Data
 public class User {
-    private String nom;
-    private String prenom;
-    private String email;
+    @Id // annotation for ID column
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // strategy for ID, here it well be ID++
+    @Column(length = 11) // column size on database side definition
+    private Integer id;
 
-    public boolean isNull() {
-        return false;
-    }
+    @Column(name = "nom", nullable = false, length = 45) // database definiton => will launch SQL exception
+    // NB: words in name should be linked by underscore => name_of_column
+    private String nom;
+
+    @Column(name = "prenom", nullable = false, length = 45) // database definiton => will launch SQL exception
+    // NB: words in name should be linked by underscore => name_of_column
+    private String prenom;
+
+    @Column(name = "email", length = 100)
+    private String email;
 }

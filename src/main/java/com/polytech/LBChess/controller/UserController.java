@@ -22,11 +22,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @GetMapping("/{userName}")
-    public ResponseEntity<User> getUserByName(@PathVariable String userName) {
-        User user = userService.getUserByName(userName);
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> getUserByName(@PathVariable Integer userId) {
+        User user = userService.getUserById(userId);
 
-        if(!user.isNull()) {
+        if(user != null) {
             return ResponseEntity.ok(user);
         }
 
@@ -36,15 +36,15 @@ public class UserController {
     @PostMapping("")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         User createdUser = userService.createUser(user);
-        if (!createdUser.isNull()) {
+        if (createdUser != null)  {
             return ResponseEntity.ok(createdUser);
         }
         return ResponseEntity.badRequest().build();
     }
 
-    @DeleteMapping("/{userName}")
-    public ResponseEntity<String> deleteUserByName(@PathVariable String userName) {
-        if (userService.deleteUserByName(userName)) {
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<String> deleteUserByName(@PathVariable Integer userId) {
+        if (userService.deleteUser(userId)) {
             return ResponseEntity.ok("User successfully removed");
         }
         return ResponseEntity.notFound().build();
